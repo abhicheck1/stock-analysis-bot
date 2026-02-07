@@ -1,63 +1,62 @@
 Quantitative Market Analysis Pipeline: Nifty 50
-A Serverless, End-to-End Algorithmic Screening System
+Serverless Algorithmic Screening & Data Orchestration
+1. Project Overview
+This repository contains a production-grade data pipeline designed to automate technical screening for Nifty 50 constituents. The system operates on a serverless architecture, performing daily data ingestion, quantitative transformation, and automated reporting.
 
-Project Overview
-This repository contains a production-ready data pipeline designed to automate the technical analysis of Nifty 50 constituents. The system operates on a serverless architecture to ingest market data, calculate statistical indicators, and distribute actionable signals through a secure notification gateway.
+Core Objective: To identify high-probability mean-reversion opportunities through rule-based statistical analysis.
 
-The primary objective of this project is to demonstrate competency in data engineering, algorithmic logic, and automated cloud orchestration.
+2. Technical Architecture
+The system follows a modular ETL (Extract, Transform, Load) design pattern, ensuring separation of concerns and system maintainability.
 
-Technical Architecture
-The system is structured as a modular ETL (Extract, Transform, Load) pipeline:
+Extraction Layer: Programmatic retrieval of adjusted OHLC (Open, High, Low, Close) data via the yfinance API.
 
-Data Ingestion (Extract): Leverages the yfinance API to retrieve historical adjusted closing prices. The system is designed to handle market volatility and data gaps by implementing robust error-handling protocols.
+Transformation Layer: Vectorized computation of technical indicators using pandas.
 
-Quantitative Transformation (Transform): * Trend Analysis: Utilizes Simple Moving Average (SMA) crossovers (20-day vs. 50-day) to filter for assets in a bullish regime.
+Delivery Layer: Automated distribution of signals via an encrypted SMTP gateway.
 
-Momentum Modeling: Implements a 14-day Relative Strength Index (RSI) calculation to detect mean-reversion opportunities.
+3. Quantitative Methodology
+The screening logic utilizes a multi-factor authentication model to filter market noise:
 
-Notification Layer (Load): Utilizes the SMTP protocol to transmit findings via an encrypted channel, ensuring stakeholders receive analysis prior to market opening.
+A. Trend Analysis (The Filter)
+The system employs a Simple Moving Average (SMA) Crossover strategy.
 
-Technical Stack
-Programming Language: Python 3.9+
+Condition: SMA(20) > SMA(50)
 
-Data Analysis: Pandas (Vectorized data processing), NumPy
+Logic: Ensures the asset is in a medium-term bullish regime before considering an entry.
 
-Orchestration: GitHub Actions (YAML-based CI/CD)
+B. Momentum Modeling (The Trigger)
+A 14-day Relative Strength Index (RSI) is used to detect price exhaustion.
 
-Data Source: Yahoo Finance API
+Condition: RSI < 45
 
-Communication: SMTP via Google Secure App Gateway
+Logic: Identifies assets that are statistically oversold and prone to a mean-reversion bounce.
 
-Algorithmic Methodology
-The screening logic is based on a dual-factor authentication model:
+4. Technical Stack
+5. System Resilience & Error Handling
+To ensure "zero-contingency" execution, the pipeline includes:
 
-Trend Confirmation: The asset must maintain a short-term SMA (20) above the long-term SMA (50), ensuring that mean-reversion attempts are aligned with broader market strength.
+Exception Wrappers: try-except blocks to prevent pipeline failure during API timeouts or ticker delistings.
 
-Statistical Exhaustion: The system flags assets with an RSI below 45. Extreme cases (e.g., RSI < 20) are prioritized as high-probability reversal candidates.
+Secure Credential Management: Implementation of GitHub Secrets for sensitive environment variables (SENDER_EMAIL, SENDER_PASSWORD).
 
-Resiliency: The script incorporates comprehensive exception handling to manage API timeouts, ticker delistings, or zero-division errors during volatility calculations.
+Stateless Execution: The bot requires no persistent storage, reducing complexity and attack surface.
 
-Performance Case Study: INFOSYS (INFY.NS)
-Signal Date: February 7, 2026
+6. Live Case Study: Infosys (INFY.NS)
+Observation Date: February 7, 2026
 
-Analysis: The pipeline identified a significant price-momentum divergence in INFY.NS.
+Technical Profile: * RSI: 18.77 (Extreme Oversold)
 
-Metrics: RSI 18.77 | CMP 1507.1
+CMP: ₹1507.1
 
-Inference: The data indicated an extreme oversold condition, marking a statistically significant entry point for short-term mean reversion.
+Signal Score: 2/2
 
-Developer Intent
-This project was initiated as a direct response to technical feedback during the Aspora interview process. It serves to validate:
+Inference: The system successfully flagged an extreme liquidity flush-out, identifying a statistically significant entry point for short-term reversal.
 
-Technical Agility: The ability to architect and deploy a functional financial tool within a 48-hour window.
+7. Developer Intent
+This project was architected as a follow-up to the Aspora interview process. It demonstrates:
 
-Systems Thinking: Understanding how to integrate disparate services (API, Python, GitHub Cloud, SMTP) into a single, zero-maintenance product.
+Technical Agility: Building a live-production tool within 48 hours.
 
-Domain Depth: Moving beyond surface-level charting into programmed, rule-based quantitative analysis.
+Full-Stack Capability: Managing the lifecycle of data from ingestion to delivery.
 
-Implementation Instructions
-Environment Variables: Ensure SENDER_EMAIL, SENDER_PASSWORD, and RECEIVER_EMAIL are configured in the repository secrets.
-
-Schedule: The main.yml workflow is set to trigger at 03:30 UTC (09:00 IST) every Monday through Friday.
-
-Manual Override: The pipeline supports workflow_dispatch for on-demand analysis.
+Actionable Feedback Loop: Proactively addressing feedback regarding "depth of knowledge" through hands-on engineering.
